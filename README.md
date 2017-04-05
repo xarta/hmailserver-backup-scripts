@@ -85,3 +85,7 @@ Xarta.json as of 5th Apr 2017 with passwords removed:
 	}	
 }
 ```
+
+Little "servers" go in this cupboard ...
+
+![Picture of plain cupboard doors](/pics/cupboard/20170405_162808.jpg?raw=true "Cupboard for my little servers etc.")
