@@ -19,7 +19,7 @@ Soon I hope to document some of this along with hMailServer installation and con
 
 Xarta.json as of 5th Apr 2017 with passwords removed:
 
-'''json
+```json
 {
     "hMailServer": {
        "User":  "Administrator",
@@ -84,4 +84,4 @@ Xarta.json as of 5th Apr 2017 with passwords removed:
 		"hmini":  "G:\\hMailServer\\Bin\\hMailServer.INI"
 	}	
 }
-'''
+```
