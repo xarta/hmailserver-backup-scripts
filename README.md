@@ -17,3 +17,69 @@ Lots to do ... i.e .deleting/managing back-ups etc. to tie into a back-up manage
 
 Soon I hope to document some of this along with hMailServer installation and configuration on my blog: blog.xarta.co.uk
 
+Xarta.json as of 5th Apr 2017 with passwords removed:
+
+{
+    "hMailServer": {
+       "User":  "Administrator",
+       "Password": "BLAH"
+    },
+	"mySQL": {
+		"backup": {
+			"User":  "dump",
+			"Password":  "BLAH"
+		},
+		"hmailserver":  {
+			"User":  "hMailServer",
+			"Password": "BLAH"
+		},
+		"test":  {
+			"User":  "test",
+			"Password":  "BLAH"
+		}
+	},
+	"7zip":  {
+		"Password":	"BLAH",
+		"test": "BLAH"
+	},
+	"network":  {
+		"User": "admin",
+		"Password": "BLAH"
+	},
+	"windowsAccounts": {
+		"scheduler": {
+			"User":  "XartaTask",
+			"Password": "BLAH",
+			"Group": "Administrators",
+			"Fullname": "XartaTasks admin",
+			"Description": "Admin for scheduler tasks when XartaMail not logged on"
+		},
+		"mailservice": {
+			"User":  "XartaMail",
+			"Password": "BLAH",
+			"Group": "Users",
+			"Fullname": "hMailServer User",
+			"Description": "Less priviledged user for hMailServer"		
+		},
+		"testonly": {
+			"User":  "XartaTest",
+			"Password": "BLAH",
+			"Group": "Users",
+			"Fullname": "Mr Xarta Test",
+			"Description": "Just for test use in scripting"		
+		}
+	},
+	"paths":  {
+		"mysqlexe":  "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysql.exe",
+		"mysqlini":  "F:\\sql\\prog\\my.ini",
+		"mysqldumpexe":  "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysqldump.exe",
+		"mysqldumpoutput":  "G:\\mysql_dump",
+		"mysqldumpdefaultsextrafile":  "F:\\sql\\prog\\my.cnf",
+		"hmdata":  "G:\\hMailServer\\Data",
+		"uncServer": "\\\\XWIFI02",
+		"uncPath": "\\USBDisk1_Volume1",
+		"hmsettingsbkup":  "G:\\settings_backup",
+		"hmcertificates":  "G:\\certificates",
+		"hmini":  "G:\\hMailServer\\Bin\\hMailServer.INI"
+	}	
+}
