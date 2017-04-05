@@ -1,5 +1,5 @@
 # hmailserver-backup-scripts
-I'm working on VBScripts, batch scripts, and a needed PowerShell shim, for my hMailServer installation on my Compute Stick (with a back-up installation in a VM).  I'm trying to grow some general use scripts and will include more for set-up and management over time, but mostly it's about back-up at the moment.
+I'm working on VBScripts, batch scripts, and a needed PowerShell shim, for my hMailServer installation on my Compute Stick (with a back-up installation in a VM). They'll sit in a protected area (physical subnet partitioned by pfSense), with another two hMailServer installations in the DMZ for incoming relays with anti-spam and anit-virus etc.  I'm trying to grow some general use scripts and will include more for set-up and management over time, but mostly it's about back-up at the moment.
 
 It's a work in progress that I can only come back to rarely / occasionally, and is particularly for my personal circumstances.
 
