@@ -1,0 +1,7 @@
+Very useful!
+
+http://stackoverflow.com/questions/22046808/how-to-ignore-files-using-git-gui-tcl-tk-application
+
+git config --global guitool."Add to .gitignore".cmd $'echo "\n$FILENAME" >> .gitignore & git add .gitignore'
+git config --global guitool."Add to .gitignore".needsfile yes
+git config --global guitool."Add to .gitignore".confirm yes

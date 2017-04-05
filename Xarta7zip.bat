@@ -1,0 +1,1 @@
+"%PROGRAMFILES%\7-Zip\7z.exe" a -t7z %1 %2 -p%3 -mhe=on -mhc=on -mx3 -mmt
