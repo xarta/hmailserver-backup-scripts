@@ -21,10 +21,54 @@ Xarta.json as of 5th Apr 2017 with passwords removed:
 
 ```json
 {
-    "hMailServer": {
-       "User":  "Administrator",
-       "Password": "BLAH"
-    },
+	"bkupKeep": {
+		"keepYears": 7,
+		"keepMonths": 24,
+		"keepWeeks": 26, 
+		"keepDays": 60
+	},
+	"tasks": {
+		"BkUpHMSsettings":{
+			"TN": "hMailServer Settings Backup",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "01:00"
+		},
+		"BkUpMySql":{
+			"TN": "hMailServer mySql Dump",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "01:15"
+		},
+		"BkUpHMSdata":{
+			"TN": "hMailServer 7zip data",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "01:25"
+		},
+		"DeleteHMSsettings":{
+			"TN": "hMailServer Delete tmp settings bkup",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "02:00"
+		},
+		"DeleteSqlDump":{
+			"TN": "hMailServer Delete MySQL Dump",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "02:30"
+		},
+		"CopyHMSsettings":{
+			"TN": "hMailServer 7zip settings",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "01:05"
+		}
+	},
+	"hMailServer": {
+	"User":  "Administrator",
+	"Password": "BLAH"
+	},
 	"mySQL": {
 		"backup": {
 			"User":  "dump",
