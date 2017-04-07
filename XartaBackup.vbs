@@ -49,30 +49,33 @@ Next
 ' *****************************************************************
 
 
+
 Const XARTADEBUG = false ' MAKE SURE false FOR TASK SCHEDULED EVENTS (ECHO USED)
 
-Dim o, jsonTasks
-Set o = GetXartaJsonObject(XartaScriptDir)
-Set jsonTasks = o("tasks")
+SetTasksAndDoBkUps XartaScriptDir
 
-For Each jsonObj in jsonTasks
-	If (WScript.Arguments.Count = 0) Then
-		SetScheduler 	o, _
-						o("tasks")(jsonObj)("TN"), _
-						jsonObj, _
-						o("tasks")(jsonObj)("SC"), _
-						o("tasks")(jsonObj)("D"), _
-						o("tasks")(jsonObj)("ST")
+Sub SetTasksAndDoBkUps(XartaScriptDir)
+	Dim o, jsonTasks
+	Set o = GetXartaJsonObject(XartaScriptDir)
+	Set jsonTasks = o("tasks")
 
-		WScript.Sleep 100 ' allow SchTasks time to add task
-	ElseIf (WScript.Arguments(0) = jsonObj) Then
-		With CreateObject("Scripting.FileSystemObject")
-			executeGlobal jsonObj + " GetXartaJsonObject(XartaScriptDir), XartaScriptDir"
-		End With
-	End If
-Next
+	For Each jsonObj in jsonTasks
+		If (WScript.Arguments.Count = 0) Then
+			SetScheduler 	o, _
+							o("tasks")(jsonObj)("TN"), _
+							jsonObj, _
+							o("tasks")(jsonObj)("SC"), _
+							o("tasks")(jsonObj)("D"), _
+							o("tasks")(jsonObj)("ST")
 
-
+			WScript.Sleep 100 ' allow SchTasks time to add task
+		ElseIf (WScript.Arguments(0) = jsonObj) Then
+			With CreateObject("Scripting.FileSystemObject")
+				executeGlobal jsonObj + " GetXartaJsonObject(XartaScriptDir), XartaScriptDir"
+			End With
+		End If
+	Next
+End Sub
 
 
 Sub BkUpHMSsettings(o, XartaScriptDir)
