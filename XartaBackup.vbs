@@ -128,9 +128,98 @@ Sub DeleteTodaysFile(sFolder)
 	Set oFSO = Nothing
 End Sub
 
-' Test IsOld function
-'msgbox ( IsOld("20160305", "20170407", 4,1,6,30) )
+' Test IsyyyymmddDate
+' msgbox IsyyyymmddDate("20170229")
 
+Function IsyyyymmddDate(yyyymmdd)
+On error resume Next
+
+	Dim IsAdate : IsAdate = True
+
+	If Not (IsNumeric(yyyymmdd)) Then
+		IsAdate = False
+	End If
+
+	If Not (Len(yyyymmdd) = 8) Then
+		IsAdate = False
+	End If
+
+	Dim testDay, testMonth, testYear
+	testDay = CInt(Mid(yyyymmdd,7,2)) 
+	testMonth = CInt(Mid(yyyymmdd,5,2))
+	testYear = CInt(Mid(yyyymmdd,1,4))
+
+	If (testDay < 1) Or (testDay > 31) Then
+		IsAdate = False
+	End If
+
+	If (testMonth < 1) Or (testMonth > 12) Then
+		IsAdate = False
+	End If
+
+	If (testYear < 2000) Or (testYear > 2050) Then
+		IsAdate = False
+	End If
+
+	Dim testDate
+	testDate = DateSerial(testYear, testMonth, testDay)
+
+	If (Year(testDate) <> testYear) Then
+		IsAdate = False
+	End If
+
+	If (Month(testDate) <> testMonth) Then
+		IsAdate = False
+	End If
+
+	If (Day(testDate) <> testDay) Then
+		IsAdate = False
+	End If
+
+
+	If Err.Number <> 0 Then
+		IsyyyymmddDate = False
+		Err.clear
+	Else
+		IsyyyymmddDate = IsAdate
+	End If
+
+End Function
+
+Sub DeleteOldFiles(o, sFolder)
+	Set oFSO = WScript.CreateObject("Scripting.FileSystemObject")
+	Dim fileDate
+
+	For Each oFile In oFSO.GetFolder(sFolder).Files
+		If Len(oFile.Name) > 7 Then
+			 fileDate = Mid(oFile.Name,1,8)
+			 If IsyyyymmddDate(fileDate) Then
+				If AllowedDeleteFile(o, fileDate) Then
+					oFSO.DeleteFile sFolder & oFile.Name
+				End If
+			End If
+		End if
+	Next
+
+	Set oFSO = Nothing
+End Sub
+
+
+' Test AllowedDeleteFile function:
+' msgbox (AllowedDeleteFile(GetXartaJsonObject(XartaScriptDir), "20090101"))
+Function AllowedDeleteFile(o, yyyymmddFile)
+	AllowedDeleteFile = _
+		IsOld(	yyyymmddFile, _
+				FileNameFormattedDateNow(), _
+				o("bkupKeep")("keepYears"), _
+				o("bkupKeep")("keepMonths"), _
+				o("bkupKeep")("keepWeeks"), _
+				o("bkupKeep")("keepDays") )
+End Function
+
+
+' Test IsOld function
+' msgbox ( IsOld("20160305", "20170407", 4,1,6,30) )
 Function IsOld(yyyymmddFile, yyyymmddNow, keepYears, keepMonths, keepWeeks, keepdays)
 
 	' True, False:
