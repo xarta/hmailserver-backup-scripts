@@ -77,6 +77,56 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 	Next
 End Sub
 
+'CopyHMSsettings GetXartaJsonObject(XartaScriptDir), XartaScriptDir
+'DeleteHMSsettings GetXartaJsonObject(XartaScriptDir), XartaScriptDir
+'DeleteSqlDump GetXartaJsonObject(XartaScriptDir), XartaScriptDir
+
+Sub CopyHMSsettings(o, XartaScriptDir)
+On error resume Next
+
+	sFolder = o("paths")("hmsettingsbkup") & "\"
+	Set oFSO = WScript.CreateObject("Scripting.FileSystemObject")
+
+	For Each oFile In oFSO.GetFolder(sFolder).Files
+		If UCase(oFSO.GetExtensionName(oFile.Name)) = "7Z" Then
+			newName = Mid(oFile.Name,10,15) & "-HMsettings"
+			newName = Replace(newName,"-","")
+			newName = Replace(newName," ","-")
+			oFSO.MoveFile sFolder & oFile.Name, sFolder & newName
+			RetVal = ZipToSambaShare(o, XartaScriptDir, _
+						sFolder & newName, _
+						newName, _
+						o("7zip")("Password"))
+			Exit For
+		End if
+	Next
+
+	Set oFSO = Nothing
+
+End Sub
+
+' make sure not to try to delete something while it's still
+' being used!  e.g. if it's still background-copying to samba share
+' TODO add something in PowerShell script I can reference (for job completion)
+Sub DeleteHMSsettings(o, XartaScriptDir)
+	DeleteTodaysFile o("paths")("hmsettingsbkup") & "\"
+End Sub
+
+Sub DeleteSqlDump(o, XartaScriptDir)
+	DeleteTodaysFile o("paths")("mysqldumpoutput") & "\"
+End Sub
+
+Sub DeleteTodaysFile(sFolder)
+	Set oFSO = WScript.CreateObject("Scripting.FileSystemObject")
+
+	For Each oFile In oFSO.GetFolder(sFolder).Files
+		If  Mid(oFile.Name,1,8) = FileNameFormattedDateNow() Then
+			oFSO.DeleteFile sFolder & oFile.Name
+		End if
+	Next
+
+	Set oFSO = Nothing
+End Sub
 
 Sub BkUpHMSsettings(o, XartaScriptDir)
 	' ------------------------------------------------------------------------------------
@@ -156,12 +206,6 @@ Sub BkUpMySql(o, XartaScriptDir)
 							DumpFileName, _
 							DumpDate & "hmdump.sql.7z", _
 							o("7zip")("Password"))
-	Dim filesys
-	Set filesys = CreateObject("Scripting.FileSystemObject")
-	If filesys.FileExists(DumpFileName) Then
-		'filesys.DeleteFile DumpFileName
-	End If
-
 End Sub
 
 'BkUpHMSdata GetXartaJsonObject(XartaScriptDir), XartaScriptDir
