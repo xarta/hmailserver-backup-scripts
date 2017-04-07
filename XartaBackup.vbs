@@ -186,6 +186,8 @@ On error resume Next
 
 End Function
 
+' TODO: ONLY ALLOW A FEW DELETIONS PER DAY OR SOMETHING?
+' IN CASE OF PROBLEM WITH CLOCK?
 Sub DeleteOldFiles(o, sFolder)
 	Set oFSO = WScript.CreateObject("Scripting.FileSystemObject")
 	Dim fileDate
