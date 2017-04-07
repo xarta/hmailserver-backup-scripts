@@ -2,6 +2,11 @@ Function FileNameFormattedDateNow()
 	FileNameFormattedDateNow = Year(Date()) & Right("0" & Month(Date()),2) & Right("0" & Day(Date()),2)
 End Function
 
+Function yyyymmddToDateSerial(yyyymmdd)
+	yyyymmddToDateSerial = _
+		DateSerial(Mid(yyyymmdd,1,4),Mid(yyyymmdd,5,2),Mid(yyyymmdd,7,2))
+End Function
+
 Function ZipToSambaShare(o, XartaScriptDir, _ 
 							zipSource, _
 							zipDestinationFileName, _

@@ -128,6 +128,63 @@ Sub DeleteTodaysFile(sFolder)
 	Set oFSO = Nothing
 End Sub
 
+' Test IsOld function
+'msgbox ( IsOld("20160305", "20170407", 4,1,6,30) )
+
+Function IsOld(yyyymmddFile, yyyymmddNow, keepYears, keepMonths, keepWeeks, keepdays)
+
+	' True, False:
+	Dim oldYearly, oldMonthly, oldWeekly, oldDaily
+	Dim isNotFirstJan : isNotFirstJan = True
+	Dim isNotFirstOfMonth : isNotFirstOfMonth = True
+	Dim isNotSunday : isNotSunday = True
+
+	If Weekday(yyyymmddToDateSerial(yyyymmddFile)) = 1 Then
+		isNotSunday = False
+	End If
+
+	If Day(yyyymmddToDateSerial(yyyymmddFile)) = 1 Then
+		isNotFirstOfMonth = False
+	End If
+
+	If Day(yyyymmddToDateSerial(yyyymmddFile)) = 1 And _
+		Month(yyyymmddToDateSerial(yyyymmddFile)) = 1 Then
+		isNotFirstJan = False
+	End If
+	
+	oldDaily = IsOldInterval(yyyymmddFile, yyyymmddNow, keepdays, "d")
+	oldDaily = oldDaily And 	isNotSunday And _
+								isNotFirstOfMonth And _
+								isNotFirstJan
+
+	oldWeekly = IsOldInterval(yyyymmddFile, yyyymmddNow, keepWeeks, "w")
+	oldWeekly = oldWeekly And 	isNotFirstOfMonth And _
+								isNotFirstJan
+
+	oldMonthly = IsOldInterval(yyyymmddFile, yyyymmddNow, keepMonths, "m")
+	oldMonthly = oldMonthly And	isNotFirstJan
+
+	oldYearly = IsOldInterval(yyyymmddFile, yyyymmddNow, keepYears, "yyyy")
+	
+	IsOld = oldDaily Or oldWeekly Or oldMonthly Or oldYearly
+
+End Function
+
+
+Function IsOldInterval(yyyymmddFile, yyyymmddNow, keepInterval, intervalType)
+	
+	Dim fd, n, numInterval
+
+	fd = yyyymmddToDateSerial(yyyymmddFile)
+	n = yyyymmddToDateSerial(yyyymmddNow)
+
+	numInterval = DateDiff(intervalType, fd, n)
+	IsOldInterval = (numInterval > keepInterval)
+	
+End Function
+
+
+
 Sub BkUpHMSsettings(o, XartaScriptDir)
 	' ------------------------------------------------------------------------------------
 	' Creates a hMailServer backup using the settings 
