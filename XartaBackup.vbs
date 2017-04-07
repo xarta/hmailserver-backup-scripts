@@ -62,11 +62,11 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 	For Each jsonObj in jsonTasks
 		If (WScript.Arguments.Count = 0) Then
 			SetScheduler 	o, _
-							o("tasks")(jsonObj)("TN"), _
+							jsonTasks(jsonObj)("TN"), _
 							jsonObj, _
-							o("tasks")(jsonObj)("SC"), _
-							o("tasks")(jsonObj)("D"), _
-							o("tasks")(jsonObj)("ST")
+							jsonTasks(jsonObj)("SC"), _
+							jsonTasks(jsonObj)("D"), _
+							jsonTasks(jsonObj)("ST")
 
 			WScript.Sleep 100 ' allow SchTasks time to add task
 		ElseIf (WScript.Arguments(0) = jsonObj) Then
