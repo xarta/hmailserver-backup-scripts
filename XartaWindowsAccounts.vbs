@@ -47,25 +47,20 @@ createUsers(GetXartaJsonObject(XartaScriptDir))
 
 Sub createUsers(o)
 
-	Dim PC
+	Dim PC, jsonAccount
 	Set PC = New XartaComputer
 
-	For Each jsonObj in o
-		If jsonObj = "windowsAccounts" Then
-			For Each winAccount in o(jsonObj)
-				createUser _
-					o(jsonObj)(winAccount)("User"), _
-					o(jsonObj)(winAccount)("Password"), _
-					o(jsonObj)(winAccount)("Group"), _ 
-					o(jsonObj)(winAccount)("Fullname"), _
-					o(jsonObj)(winAccount)("Description"), _
-					PC
-			Next
-		End If
-	Next
-
+	Set jsonAccount = o("windowsAccounts")
+		For Each winAccount in jsonAccount
+			createUser _
+				jsonAccount(winAccount)("User"), _
+				jsonAccount(winAccount)("Password"), _
+				jsonAccount(winAccount)("Group"), _ 
+				jsonAccount(winAccount)("Fullname"), _
+				jsonAccount(winAccount)("Description"), _
+				PC
+		Next
 End Sub
-
 
 Sub createUser(userName, userPass, userType, userFullname, userDescription, PC)
 	
