@@ -41,16 +41,23 @@ iFiles.Add 	"XartaErrorCodes.vbs",		"Functions to return error " & _
 
 iFiles.Add 	"XartaUtilities.vbs",		"Boring stuff grouped together"
 
+iFiles.Add "XartaLog.vbs",				"Logging class I found on the net"
+
 For Each iFile in iFiles
 	With CreateObject("Scripting.FileSystemObject")
 		executeGlobal .openTextFile(XartaScriptDir & iFile).readAll()
 	End With	
 Next
+
+Set Logging = New Cls_Logging
+logging.logevent = true
+call logging.write("Script started",1)
+
 ' *****************************************************************
 
 
 
-Const XARTADEBUG = false ' MAKE SURE false FOR TASK SCHEDULED EVENTS (ECHO USED)
+Dim XARTADEBUG : XARTADEBUG= false
 
 SetTasksAndDoBkUps XartaScriptDir
 
@@ -71,6 +78,7 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 			WScript.Sleep 100 ' allow SchTasks time to add task
 		ElseIf (WScript.Arguments(0) = jsonObj) Then
 			With CreateObject("Scripting.FileSystemObject")
+				call logging.write(jsonObj,1)
 				executeGlobal jsonObj + " GetXartaJsonObject(XartaScriptDir), XartaScriptDir"
 			End With
 		End If
@@ -130,7 +138,7 @@ End Sub
 
 ' Test IsyyyymmddDate
 ' msgbox IsyyyymmddDate("20170229")
-
+' TODO: Make IsyyyymmddDate more efficient
 Function IsyyyymmddDate(yyyymmdd)
 On error resume Next
 
@@ -186,12 +194,37 @@ On error resume Next
 
 End Function
 
+' Call XartaBackup.vbs ApprovedDeleteOldBackUps from powershell
+' that has Execution policy set to bypass, and that connects
+' to UNC path where backups are stored
+Sub ApprovedDeleteOldBackUps(o, XartaScriptDir)
+	' TODO: check UNC path accessible!
+	msgbox "hello"
+	DeleteOldFiles o, o("paths")("uncServer") & o("paths")("uncPath")
+End Sub
+
+'ScheduledDeleteOldBackUps GetXartaJsonObject(XartaScriptDir), XartaScriptDir
+Sub ScheduledDeleteOldBackUps(o, XartaScriptDir)
+	Dim script, args, unc, RetVal
+
+	unc = 	" -uncServer " & o("paths")("uncServer") & _
+			" -uncFullPath " & o("paths")("uncServer") & o("paths")("uncPath") & _
+			" -uncUser " & o("network")("User") & _
+			" -uncPass " & o("network")("Password")
+
+
+	script = XartaScriptDir & "XartaDeleteOldBkUps.ps1"
+	args = unc & " " & XartaScriptDir & "XartaBackup.vbs"
+
+	RetVal = PowerShell(script, args)
+End Sub
+
 ' TODO: ONLY ALLOW A FEW DELETIONS PER DAY OR SOMETHING?
 ' IN CASE OF PROBLEM WITH CLOCK?
 Sub DeleteOldFiles(o, sFolder)
 	Set oFSO = WScript.CreateObject("Scripting.FileSystemObject")
 	Dim fileDate
-
+	
 	For Each oFile In oFSO.GetFolder(sFolder).Files
 		If Len(oFile.Name) > 7 Then
 			 fileDate = Mid(oFile.Name,1,8)
