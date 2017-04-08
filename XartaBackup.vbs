@@ -23,8 +23,8 @@ XartaScriptDir = Replace(WScript.ScriptFullName,WScript.ScriptName,"")
 Set iFiles = CreateObject("Scripting.Dictionary")
 'iFiles.Add 	"XartaElevate.vbs", 		"Elevate (UAC) script"
 
-iFiles.Add	"VbsJson.vbs",				"Someone's great class for " & _
-										"JSON encoding/decoding"
+iFiles.Add	"VbsJson.vbs",              "Someone's great class for " & _
+                                        "JSON encoding/decoding"
 
 iFiles.Add 	"XartaJson.vbs", 			"Depends on VbsJson.vbs: " & _
 										"decode Xarta.json (settings)"
