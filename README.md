@@ -24,41 +24,53 @@ Xarta.json as of 5th Apr 2017 with passwords removed:
 	"bkupKeep": {
 		"keepYears": 7,
 		"keepMonths": 24,
-		"keepWeeks": 26, 
+		"keepWeeks": 26,
 		"keepDays": 60
 	},
 	"tasks": {
-		"BkUpHMSsettings":{
+		"ApprovedDeleteOldBackUps": {
+			"TN": "hMailServer DO NOT RUN HERE",
+			"SC": "ONCE",
+			"D": "01/01/2050",
+			"ST": "06:00"
+		},
+		"ScheduledDeleteOldBackUps": {
+			"TN": "hMailServer Prune old back-ups",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "04:00"
+		},
+		"BkUpHMSsettings": {
 			"TN": "hMailServer Settings Backup",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
 			"ST": "01:00"
 		},
-		"BkUpMySql":{
+		"BkUpMySql": {
 			"TN": "hMailServer mySql Dump",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
 			"ST": "01:15"
 		},
-		"BkUpHMSdata":{
+		"BkUpHMSdata": {
 			"TN": "hMailServer 7zip data",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
 			"ST": "01:25"
 		},
-		"DeleteHMSsettings":{
+		"DeleteHMSsettings": {
 			"TN": "hMailServer Delete tmp settings bkup",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
 			"ST": "02:00"
 		},
-		"DeleteSqlDump":{
+		"DeleteSqlDump": {
 			"TN": "hMailServer Delete MySQL Dump",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
 			"ST": "02:30"
 		},
-		"CopyHMSsettings":{
+		"CopyHMSsettings": {
 			"TN": "hMailServer 7zip settings",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
@@ -66,67 +78,67 @@ Xarta.json as of 5th Apr 2017 with passwords removed:
 		}
 	},
 	"hMailServer": {
-	"User":  "Administrator",
-	"Password": "BLAH"
+		"User": "Administrator",
+		"Password": "BLAH"
 	},
 	"mySQL": {
 		"backup": {
-			"User":  "dump",
-			"Password":  "BLAH"
-		},
-		"hmailserver":  {
-			"User":  "hMailServer",
+			"User": "dump",
 			"Password": "BLAH"
 		},
-		"test":  {
-			"User":  "test",
-			"Password":  "BLAH"
+		"hmailserver": {
+			"User": "hMailServer",
+			"Password": "BLAH"
+		},
+		"test": {
+			"User": "test",
+			"Password": "test"
 		}
 	},
-	"7zip":  {
-		"Password":	"BLAH",
-		"test": "BLAH"
+	"7zip": {
+		"Password": "BLAH",
+		"test": "test"
 	},
-	"network":  {
+	"network": {
 		"User": "admin",
 		"Password": "BLAH"
 	},
 	"windowsAccounts": {
 		"scheduler": {
-			"User":  "XartaTask",
+			"User": "XartaTask",
 			"Password": "BLAH",
 			"Group": "Administrators",
 			"Fullname": "XartaTasks admin",
 			"Description": "Admin for scheduler tasks when XartaMail not logged on"
 		},
 		"mailservice": {
-			"User":  "XartaMail",
+			"User": "XartaMail",
 			"Password": "BLAH",
 			"Group": "Users",
 			"Fullname": "hMailServer User",
-			"Description": "Less priviledged user for hMailServer"		
+			"Description": "Less priviledged user for hMailServer"
 		},
 		"testonly": {
-			"User":  "XartaTest",
+			"User": "XartaTest",
 			"Password": "BLAH",
 			"Group": "Users",
 			"Fullname": "Mr Xarta Test",
-			"Description": "Just for test use in scripting"		
+			"Description": "Just for test use in scripting"
 		}
 	},
-	"paths":  {
-		"mysqlexe":  "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysql.exe",
-		"mysqlini":  "F:\\sql\\prog\\my.ini",
-		"mysqldumpexe":  "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysqldump.exe",
-		"mysqldumpoutput":  "G:\\mysql_dump",
-		"mysqldumpdefaultsextrafile":  "F:\\sql\\prog\\my.cnf",
-		"hmdata":  "G:\\hMailServer\\Data",
+	"paths": {
+		"mysqlexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysql.exe",
+		"mysqlini": "F:\\sql\\prog\\my.ini",
+		"mysqldumpexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysqldump.exe",
+		"mysqldumpoutput": "G:\\mysql_dump",
+		"mysqldumpdefaultsextrafile": "F:\\sql\\prog\\my.cnf",
+		"hmdata": "G:\\hMailServer\\Data",
 		"uncServer": "\\\\XWIFI02",
 		"uncPath": "\\USBDisk1_Volume1",
-		"hmsettingsbkup":  "G:\\settings_backup",
-		"hmcertificates":  "G:\\certificates",
-		"hmini":  "G:\\hMailServer\\Bin\\hMailServer.INI"
-	}	
+		"hmsettingsbkup": "G:\\settings_backup",
+		"hmcertificates": "G:\\certificates",
+		"hmini": "G:\\hMailServer\\Bin\\hMailServer.INI"
+	}
 }
 ```
 
