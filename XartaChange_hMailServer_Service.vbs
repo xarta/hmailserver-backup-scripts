@@ -19,31 +19,42 @@ Dim iFiles, XartaScriptDir
 XartaScriptDir = Replace(WScript.ScriptFullName,WScript.ScriptName,"")
 
 Set iFiles = CreateObject("Scripting.Dictionary")
-iFiles.Add 	"XartaElevate.vbs", 		"Elevate (UAC) script"
+iFiles.Add 	"XartaElevate.vbs", _
+                                        "Elevate (UAC) script"
 
-iFiles.Add 	"VbsJson.vbs", 				"Someone's great class for " & _
-										"JSON encoding/decoding"
+iFiles.Add	"VbsJson.vbs", _
+                                        "Someone's great class for " & _
+                                        "JSON encoding/decoding"
 
-iFiles.Add 	"XartaJson.vbs", 			"Depends on VbsJson.vbs: " & _
-										"decode Xarta.json (settings)"
+iFiles.Add 	"XartaJson.vbs", _
+                                        "Depends on VbsJson.vbs: " & _
+                                        "decode Xarta.json (settings)"
 
-iFiles.Add 	"XartaADS_constants.vbs", 	" ... just constants"
+iFiles.Add 	"XartaADS_constants.vbs", _
+                                        " ... just constants"
 
-iFiles.Add 	"XartaComputer.vbs",		"initialise & encapsulate " & _
-										"in class host related " & _
-										"objects/values for convenience " & _
-										"and future extension"
+iFiles.Add 	"XartaComputer.vbs", _
+                                        "initialise & encapsulate " & _
+                                        "in class host related " & _
+                                        "objects/values for convenience " & _
+                                        "and future extension"
 
-iFiles.Add 	"XartaErrorCodes.vbs",		"Functions to return error " & _
-										"descriptions"
+iFiles.Add 	"XartaErrorCodes.vbs", _
+                                        "Functions to return error " & _
+                                        "descriptions"
+
+'iFiles.Add 	"XartaUtilities.vbs", _
+                                        '"Boring stuff grouped together"
+
+'iFiles.Add "XartaLog.vbs", _
+                                        '"Logging class I found on the net"
 
 For Each iFile in iFiles
-	With CreateObject("Scripting.FileSystemObject")
-		executeGlobal .openTextFile(XartaScriptDir & iFile).readAll()
-	End With	
+    With CreateObject("Scripting.FileSystemObject")
+        executeGlobal .openTextFile(XartaScriptDir & iFile).readAll()
+    End With	
 Next
 ' *****************************************************************
-
 
 Dim PC, o
 Set PC = New XartaComputer
