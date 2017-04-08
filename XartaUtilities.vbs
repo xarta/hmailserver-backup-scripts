@@ -26,15 +26,15 @@ Function ZipToSambaShare(o, XartaScriptDir, _
 	script = XartaScriptDir & "Xarta7zip.ps1"
 	args = unc & zip & " " & XartaScriptDir & "Xarta7zip.bat"
 
-	ZipToSambaShare = PowerShell(script, args)
+	ZipToSambaShare = PowerShell(script, args, True)
 
 End Function
 
-Function PowerShell(script, args)
+Function PowerShell(script, args, waitReturn)
 	Set objShell = CreateObject("WScript.Shell")
 	' make sure args has leading space
 	args = " " & LTrim(args)
-	PowerShell = objShell.Run("powershell -ExecutionPolicy Bypass -noexit -file " & script & args)
+	PowerShell = objShell.Run("powershell -ExecutionPolicy Bypass -noexit -file " & script & args, 4, waitReturn)
 End Function
 
 

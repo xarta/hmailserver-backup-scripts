@@ -81,6 +81,8 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 				call logging.write(jsonObj,1)
 				executeGlobal jsonObj + " GetXartaJsonObject(XartaScriptDir), XartaScriptDir"
 			End With
+		Else
+			call logging.write("Unknown parameter: " & WScript.Arguments(0),1)
 		End If
 	Next
 End Sub
@@ -199,8 +201,7 @@ End Function
 ' to UNC path where backups are stored
 Sub ApprovedDeleteOldBackUps(o, XartaScriptDir)
 	' TODO: check UNC path accessible!
-	msgbox "hello"
-	DeleteOldFiles o, o("paths")("uncServer") & o("paths")("uncPath")
+	DeleteOldFiles o, o("paths")("uncServer") & o("paths")("uncPath") & "\"
 End Sub
 
 'ScheduledDeleteOldBackUps GetXartaJsonObject(XartaScriptDir), XartaScriptDir
@@ -216,7 +217,7 @@ Sub ScheduledDeleteOldBackUps(o, XartaScriptDir)
 	script = XartaScriptDir & "XartaDeleteOldBkUps.ps1"
 	args = unc & " " & XartaScriptDir & "XartaBackup.vbs"
 
-	RetVal = PowerShell(script, args)
+	RetVal = PowerShell(script, args, True)
 End Sub
 
 ' TODO: ONLY ALLOW A FEW DELETIONS PER DAY OR SOMETHING?
@@ -224,7 +225,7 @@ End Sub
 Sub DeleteOldFiles(o, sFolder)
 	Set oFSO = WScript.CreateObject("Scripting.FileSystemObject")
 	Dim fileDate
-	
+
 	For Each oFile In oFSO.GetFolder(sFolder).Files
 		If Len(oFile.Name) > 7 Then
 			 fileDate = Mid(oFile.Name,1,8)
@@ -426,7 +427,20 @@ Sub SetScheduler(o, taskName, taskArg, SC, D, ST)
 	' Looks like the delete instruction only works if the user trying to delete is the 
 	' same user who authored the task before (doesn't matter who is set for run-as)
 	wShell.Run "SchTasks /Delete /TN """ & taskName & """ /F", 0
+
+	If SC = "ONCE" Then
+		SC = " /SC " & SC
+		D =  " /SD " & D 	' a little hack to reduce json and argument-parsing-in-this-script
+							' complexity (SD = Start Date)
+	ElseIf Not (SC="") Then
+		SC = " /SC " & SC
+		If Not (D="") Then
+			D = " /D " & D
+		End If
+	End If
+
+
 	wShell.Run "SchTasks /Create /RU """ & o("windowsAccounts")("scheduler")("User") & """ /RP """  & _
-		o("windowsAccounts")("scheduler")("Password") & """ /SC " & SC & " /D " & D & " /TN """ & _
+		o("windowsAccounts")("scheduler")("Password") & """" & SC & D & " /TN """ & _
 		taskName & """ /TR """ & taskActionPath & """ /ST " & ST & """", 0
 End Sub
