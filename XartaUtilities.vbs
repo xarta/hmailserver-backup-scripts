@@ -1,103 +1,112 @@
+
 Function FileNameFormattedDateNow()
-	FileNameFormattedDateNow = Year(Date()) & Right("0" & Month(Date()),2) & Right("0" & Day(Date()),2)
+    FileNameFormattedDateNow =  Year(Date()) & _
+                                Right("0" & Month(Date()),2) & _
+                                Right("0" & Day(Date()),2)
 End Function
 
 Function yyyymmddToDateSerial(yyyymmdd)
-	yyyymmddToDateSerial = _
-		DateSerial(Mid(yyyymmdd,1,4),Mid(yyyymmdd,5,2),Mid(yyyymmdd,7,2))
+    yyyymmddToDateSerial =  DateSerial( _
+                            Mid(yyyymmdd,1,4), _
+                            Mid(yyyymmdd,5,2), _
+                            Mid(yyyymmdd,7,2))
 End Function
 
-Function ZipToSambaShare(o, XartaScriptDir, _ 
-							zipSource, _
-							zipDestinationFileName, _
-							zipPassword)
+Function ZipToSambaShare(   o, XartaScriptDir, _ 
+                            zipSource, _
+                            zipDestinationFileName, _
+                            zipPassword)
 
 	Dim script, args, unc, zip
 
-	unc = 	" -uncServer " & o("paths")("uncServer") & _
-			" -uncFullPath " & o("paths")("uncServer") & o("paths")("uncPath") & _
-			" -uncUser " & o("network")("User") & _
-			" -uncPass " & o("network")("Password")
+    unc =   " -uncServer " & o("paths")("uncServer") & _
+            " -uncFullPath " & o("paths")("uncServer") & o("paths")("uncPath") & _
+            " -uncUser " & o("network")("User") & _
+            " -uncPass " & o("network")("Password")
 
-	zip = 	" -zipDestination " & zipDestinationFileName & _
-			" -zipSource " & zipSource & _
-			" -zipPassword " & zipPassword
+    zip =   " -zipDestination " & zipDestinationFileName & _
+            " -zipSource " & zipSource & _
+            " -zipPassword " & zipPassword
 
-	script = XartaScriptDir & "Xarta7zip.ps1"
-	args = unc & zip & " " & XartaScriptDir & "Xarta7zip.bat"
+    script = XartaScriptDir & "Xarta7zip.ps1"
+    args = unc & zip & " " & XartaScriptDir & "Xarta7zip.bat"
 
-	ZipToSambaShare = PowerShell(script, args, True)
+    ZipToSambaShare = PowerShell(script, args, True)
 
 End Function
 
 Function PowerShell(script, args, waitReturn)
-	Set objShell = CreateObject("WScript.Shell")
-	' make sure args has leading space
-	args = " " & LTrim(args)
-	Dim psdebug : psdebug = "-NoLogo"
-	Dim windowStyle : windowStyle = 0
+    Set objShell = CreateObject("WScript.Shell")
+    ' make sure args has leading space
+    args = " " & LTrim(args)
+    Dim psdebug : psdebug = "-NoLogo"
+    Dim windowStyle : windowStyle = 0
 
-	If XARTADEBUG = True Then
-		psdebug = "-NoExit"
-		windowStyle = 4
-		msgbox "PowerShell script & args = " & script & args
-	End If
+    If XARTADEBUG = True Then
+        psdebug = "-NoExit"
+        windowStyle = 4
+        msgbox "PowerShell script & args = " & script & args
+    End If
 
-	PowerShell = objShell.Run("powershell -ExecutionPolicy Bypass " & psdebug & " -file " & script & args, windowStyle, waitReturn)
+    PowerShell = objShell.Run(  "powershell -ExecutionPolicy Bypass " & _
+                                psdebug & " -file " & script & args, _
+                                windowStyle, waitReturn)
 End Function
 
 
 
 Function hMailServer(startstop)
-	
-	Dim RetVal
 
-	RetVal = -1
+    Dim RetVal
 
-	If startstop = "start" Then
-		RetVal = StartService("hMailServer")
-	End If
+    RetVal = -1
 
-	If startstop = "stop" Then
-		RetVal = StopService("hMailServer")
-	End If
+    If startstop = "start" Then
+        RetVal = StartService("hMailServer")
+    End If
 
-	hMailServer = RetVal
+    If startstop = "stop" Then
+        RetVal = StopService("hMailServer")
+    End If
+
+    hMailServer = RetVal
 
 End Function
 
 Function StartService(servicename)
-	Set ServiceSet = GetObject("winmgmts:").ExecQuery("select * from Win32_Service where Name='" & servicename & "'")
-	
-	For Each Service in ServiceSet
-		RetVal = Service.StartService()
-	Next
+    Set ServiceSet =    GetObject("winmgmts:").ExecQuery( _
+                        "select * from Win32_Service where Name='" & servicename & "'")
 
-	StartService = RetVal
+    For Each Service in ServiceSet
+        RetVal = Service.StartService()
+    Next
+
+    StartService = RetVal
 End Function
 
 Function StopService(servicename)
-	Set ServiceSet = GetObject("winmgmts:").ExecQuery("select * from Win32_Service where Name='" & servicename & "'")
-	
-	For Each Service in ServiceSet
-		RetVal = Service.StopService()
-	Next
+    Set ServiceSet =    GetObject("winmgmts:").ExecQuery( _
+                        "select * from Win32_Service where Name='" & servicename & "'")
 
-	StopService = RetVal
+    For Each Service in ServiceSet
+        RetVal = Service.StopService()
+    Next
+
+    StopService = RetVal
 End Function
 
 
 ' escape characters that create a problem in .bat files etc. EVEN when in quotes
 Function Esc(p)
-	Dim escaped
-	escaped = ""
-	For i=1 To Len(p)-1
-		If Mid(p,i,1) = "%" Then
-			escaped = escaped & "%%"
-		Else
-			escaped = escaped & Mid(p,i,1)
-		End If
-	Next
+    Dim escaped
+    escaped = ""
+    For i=1 To Len(p)-1
+        If Mid(p,i,1) = "%" Then
+            escaped = escaped & "%%"
+        Else
+            escaped = escaped & Mid(p,i,1)
+        End If
+    Next
 
-	Esc = escaped
+    Esc = escaped
 End Function
