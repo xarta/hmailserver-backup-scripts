@@ -34,7 +34,16 @@ Function PowerShell(script, args, waitReturn)
 	Set objShell = CreateObject("WScript.Shell")
 	' make sure args has leading space
 	args = " " & LTrim(args)
-	PowerShell = objShell.Run("powershell -ExecutionPolicy Bypass -NoLogo -file " & script & args, 0, waitReturn)
+	Dim psdebug : psdebug = "-NoLogo"
+	Dim windowStyle : windowStyle = 0
+
+	If XARTADEBUG = True Then
+		psdebug = "-NoExit"
+		windowStyle = 4
+		msgbox "PowerShell script & args = " & script & args
+	End If
+
+	PowerShell = objShell.Run("powershell -ExecutionPolicy Bypass " & psdebug & " -file " & script & args, windowStyle, waitReturn)
 End Function
 
 

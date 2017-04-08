@@ -67,6 +67,13 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 	Set o = GetXartaJsonObject(XartaScriptDir)
 	Set jsonTasks = o("tasks")
 
+	If (WScript.Arguments.Count > 1) Then
+		If (WScript.Arguments(1)="DEBUG") Then
+			XARTADEBUG = True
+			msgbox "XARTADEBUG (Verbose) True"
+		End If
+	End If
+
 	For Each jsonObj in jsonTasks
 		If (WScript.Arguments.Count = 0) Then
 			SetScheduler 	o, _
@@ -81,17 +88,15 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 			WScript.Sleep 100 ' allow SchTasks time to add task
 		ElseIf (WScript.Arguments(0) = jsonObj) Then
 			success = True
+			' logging won't work for ApprovedDeleteOldBackUps because log file
+			' already open with XartaBackups ScheduledDeleteOldBackUps
+			' TODO: Find a Work-a-round!
+			call logging.write("Calling: " & jsonObj,1)
 			With CreateObject("Scripting.FileSystemObject")
-				call logging.write("Calling: " & jsonObj,1)
 				executeGlobal jsonObj + " GetXartaJsonObject(XartaScriptDir), XartaScriptDir"
 			End With
 		End If
 	Next
-	If (WScript.Arguments.Count > 1) Then
-		If (WScript.Arguments(1)="DEBUG") Then
-			XARTADEBUG = True
-		End If
-	End If
 
 	If success = False Then
 		call logging.write("Unknown parameter: " & WScript.Arguments(0),1)
@@ -124,6 +129,9 @@ On error resume Next
 
 	Set oFSO = Nothing
 
+	If err.Number <> 0 Then
+		call logging.write("CopyHMSsettings error",3)
+	End If
 End Sub
 
 ' make sure not to try to delete something while it's still
@@ -235,9 +243,9 @@ On error resume Next
 
 	script = XartaScriptDir & "XartaDeleteOldBkUps.ps1"
 	args = unc & " " & XartaScriptDir & "XartaBackup.vbs"
-
+	
 	RetVal = PowerShell(script, args, True)
-
+	
 	If err.Number <> 0 Then
 		call logging.write("ScheduledDeleteOldBackUps error",3)
 	End If
