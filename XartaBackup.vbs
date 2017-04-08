@@ -57,7 +57,7 @@ call logging.write("Script started",1)
 
 
 
-Dim XARTADEBUG : XARTADEBUG= false
+Dim XARTADEBUG : XARTADEBUG= False
 
 SetTasksAndDoBkUps XartaScriptDir
 
@@ -87,6 +87,11 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 			End With
 		End If
 	Next
+	If (WScript.Arguments.Count > 1) Then
+		If (WScript.Arguments(1)="DEBUG") Then
+			XARTADEBUG = True
+		End If
+	End If
 
 	If success = False Then
 		call logging.write("Unknown parameter: " & WScript.Arguments(0),1)
@@ -206,12 +211,20 @@ End Function
 ' that has Execution policy set to bypass, and that connects
 ' to UNC path where backups are stored
 Sub ApprovedDeleteOldBackUps(o, XartaScriptDir)
+On error resume Next
+
 	' TODO: check UNC path accessible!
 	DeleteOldFiles o, o("paths")("uncServer") & o("paths")("uncPath") & "\"
+
+	If err.Number <> 0 Then
+		call logging.write("ApprovedDeleteOldBackUps error",3)
+	End If
 End Sub
 
 'ScheduledDeleteOldBackUps GetXartaJsonObject(XartaScriptDir), XartaScriptDir
 Sub ScheduledDeleteOldBackUps(o, XartaScriptDir)
+On error resume Next
+
 	Dim script, args, unc, RetVal
 
 	unc = 	" -uncServer " & o("paths")("uncServer") & _
@@ -224,6 +237,10 @@ Sub ScheduledDeleteOldBackUps(o, XartaScriptDir)
 	args = unc & " " & XartaScriptDir & "XartaBackup.vbs"
 
 	RetVal = PowerShell(script, args, True)
+
+	If err.Number <> 0 Then
+		call logging.write("ScheduledDeleteOldBackUps error",3)
+	End If
 End Sub
 
 ' TODO: ONLY ALLOW A FEW DELETIONS PER DAY OR SOMETHING?
@@ -317,6 +334,8 @@ End Function
 
 
 Sub BkUpHMSsettings(o, XartaScriptDir)
+On error resume Next
+
 	' ------------------------------------------------------------------------------------
 	' Creates a hMailServer backup using the settings 
 	' specified in hMailAdmin.
@@ -340,10 +359,16 @@ Sub BkUpHMSsettings(o, XartaScriptDir)
 	Call oApp.Authenticate (o("hMailServer")("User"), o("hMailServer")("Password"))
 	Call oApp.BackupManager.StartBackup()
 	' ------------------------------------------------------------------------------------
+
+	If err.Number <> 0 Then
+		call logging.write("BkUpHMSsettings error",3)
+	End If
 End Sub
 
 
 Sub WriteSqlBackUpScripts(o, XartaScriptDir)
+On error resume Next
+
 	' not using here but keeping for reference:
 	' mysqldump return codes:
 	'	1	EX_USAGE
@@ -373,11 +398,15 @@ Sub WriteSqlBackUpScripts(o, XartaScriptDir)
 
 	objFile.Close
 
+	If err.Number <> 0 Then
+		call logging.write("WriteSqlBackUpScripts error",3)
+	End If
 End Sub
 
 'BkUpMySql GetXartaJsonObject(XartaScriptDir), XartaScriptDir
 
 Sub BkUpMySql(o, XartaScriptDir)
+On error resume Next
 
 	WriteSqlBackUpScripts o, XartaScriptDir
 	
@@ -394,11 +423,16 @@ Sub BkUpMySql(o, XartaScriptDir)
 							DumpFileName, _
 							DumpDate & "hmdump.sql.7z", _
 							o("7zip")("Password"))
+	
+	If err.Number <> 0 Then
+		call logging.write("BkUpMySql error",3)
+	End If
 End Sub
 
 'BkUpHMSdata GetXartaJsonObject(XartaScriptDir), XartaScriptDir
 
 Sub BkUpHMSdata(o, XartaScriptDir)
+On error resume Next
 
 	Dim RetVal, resultnum, resultdescription, filenameDest
 
@@ -413,7 +447,10 @@ Sub BkUpHMSdata(o, XartaScriptDir)
 
 	resultnum = hMailServer("start")
 	resultdescription = StartStopServiceError(resultnum)
-
+	
+	If err.Number <> 0 Then
+		call logging.write("BkUpHMSdata error",3)
+	End If
 End Sub
 
 
@@ -421,6 +458,7 @@ End Sub
 
 
 Sub SetScheduler(o, taskName, taskArg, SC, D, ST)
+On error resume Next
 	' http://www.robvanderwoude.com/schtasks.php
 	Dim taskActionPath
 	taskActionPath = WScript.ScriptFullName & " " & Chr(34) & taskArg & Chr(34)
@@ -449,4 +487,8 @@ Sub SetScheduler(o, taskName, taskArg, SC, D, ST)
 	wShell.Run "SchTasks /Create /RU """ & o("windowsAccounts")("scheduler")("User") & """ /RP """  & _
 		o("windowsAccounts")("scheduler")("Password") & """" & SC & D & " /TN """ & _
 		taskName & """ /TR """ & taskActionPath & """ /ST " & ST & """", 0
+	
+	If err.Number <> 0 Then
+		call logging.write("SetScheduler error",3)
+	End If
 End Sub
