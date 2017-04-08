@@ -63,6 +63,7 @@ SetTasksAndDoBkUps XartaScriptDir
 
 Sub SetTasksAndDoBkUps(XartaScriptDir)
 	Dim o, jsonTasks
+	Dim success : success = False
 	Set o = GetXartaJsonObject(XartaScriptDir)
 	Set jsonTasks = o("tasks")
 
@@ -75,16 +76,21 @@ Sub SetTasksAndDoBkUps(XartaScriptDir)
 							jsonTasks(jsonObj)("D"), _
 							jsonTasks(jsonObj)("ST")
 
+			call logging.write("Scheduled: " & jsonObj, 1)
+			success = True
 			WScript.Sleep 100 ' allow SchTasks time to add task
 		ElseIf (WScript.Arguments(0) = jsonObj) Then
+			success = True
 			With CreateObject("Scripting.FileSystemObject")
-				call logging.write(jsonObj,1)
+				call logging.write("Calling: " & jsonObj,1)
 				executeGlobal jsonObj + " GetXartaJsonObject(XartaScriptDir), XartaScriptDir"
 			End With
-		Else
-			call logging.write("Unknown parameter: " & WScript.Arguments(0),1)
 		End If
 	Next
+
+	If success = False Then
+		call logging.write("Unknown parameter: " & WScript.Arguments(0),1)
+	End If
 End Sub
 
 'CopyHMSsettings GetXartaJsonObject(XartaScriptDir), XartaScriptDir

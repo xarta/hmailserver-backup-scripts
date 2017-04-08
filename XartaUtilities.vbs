@@ -34,7 +34,7 @@ Function PowerShell(script, args, waitReturn)
 	Set objShell = CreateObject("WScript.Shell")
 	' make sure args has leading space
 	args = " " & LTrim(args)
-	PowerShell = objShell.Run("powershell -ExecutionPolicy Bypass -noexit -file " & script & args, 4, waitReturn)
+	PowerShell = objShell.Run("powershell -ExecutionPolicy Bypass -NoLogo -file " & script & args, 0, waitReturn)
 End Function
 
 
