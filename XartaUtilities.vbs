@@ -30,8 +30,9 @@ Function ZipToSambaShare(   o, XartaScriptDir, _
 
     script = XartaScriptDir & "Xarta7zip.ps1"
     args = unc & zip & " " & XartaScriptDir & "Xarta7zip.bat"
+    Dim waitReturn : waitReturn = True
 
-    ZipToSambaShare = PowerShell(script, args, True)
+    ZipToSambaShare = PowerShell(script, args, waitReturn)
 
 End Function
 
