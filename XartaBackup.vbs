@@ -405,13 +405,21 @@ On error resume Next
                         " --verbose -u" & o("mySQL")("backup")("User") & _ 
                         " -hlocalhost hmailserver 2> " & o("paths")("mysqldumpoutput") & "\dump.log > " & _
                         "%1")
+
+    objFile.Writeline(  chr(34) & o("paths")("mysqlcheckexe") & chr(34) & _
+                        " --defaults-extra-file=" & o("paths")("mysqldumpdefaultsextrafile") & _
+                        " --verbose -u" & o("mySQL")("hmailserver")("User") & _ 
+                        " --repair --databases hmailserver" )
 	
     Set objFile = objFSO.OpenTextFile(o("paths")("mysqldumpdefaultsextrafile"), ForWriting)
 
     objFile.Writeline("[mysqldump]")
     objFile.Writeline("user=" & o("mySQL")("backup")("User"))
     objFile.Writeline("password=" & chr(34) & o("mySQL")("backup")("Password") & chr(34))
-
+    objFile.Writeline("")
+    objFile.Writeline("[mysqlcheck]")
+    objFile.Writeline("user=" & o("mySQL")("hmailserver")("User"))
+    objFile.Writeline("password=" & chr(34) & o("mySQL")("hmailserver")("Password") & chr(34))
     objFile.Close
 
     If err.Number <> 0 Then
