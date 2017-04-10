@@ -130,6 +130,7 @@ Xarta.json as of 8th Apr 2017 with passwords removed:
 		"mysqlexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysql.exe",
 		"mysqlini": "F:\\sql\\prog\\my.ini",
 		"mysqldumpexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysqldump.exe",
+		"mysqlcheckexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysqlcheck.exe",
 		"mysqldumpoutput": "G:\\mysql_dump",
 		"mysqldumpdefaultsextrafile": "F:\\sql\\prog\\my.cnf",
 		"hmdata": "G:\\hMailServer\\Data",
