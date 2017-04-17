@@ -469,7 +469,7 @@ On error resume Next
     RetVal = PowerShell(script, args, waitReturn)
 
 
-    Dim DumpDate, DumpFilename, RetVal
+    Dim DumpDate, DumpFilename
 
     DumpDate = FileNameFormattedDateNow()
     DumpFilename = o("paths")("mysqldumpoutput") & "\" & DumpDate & "hmdump.sql"
