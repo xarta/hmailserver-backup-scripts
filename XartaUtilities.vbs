@@ -46,7 +46,7 @@ Function PowerShell(script, args, waitReturn)
     If XARTADEBUG = True Then
         psdebug = "-NoExit"
         windowStyle = 4
-        msgbox "PowerShell script & args = " & script & args
+        msgbox "PowerShell script & args = :   " & script & args
     End If
 
     PowerShell = objShell.Run(  "powershell -ExecutionPolicy Bypass " & _
