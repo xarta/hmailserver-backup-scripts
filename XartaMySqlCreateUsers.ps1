@@ -13,6 +13,8 @@ Param(
     [Parameter(Mandatory=$True,Position=6)]
     [string]$database
 )
+#TODO:  See if the secure password type is applicable here for backupPassword
+#       (Even if not secure in vbScript lol)
 try 
 {
 
@@ -28,10 +30,12 @@ try
     $executeFlushPrivileges = "FLUSH PRIVILEGES";
 
     [string]$mysql = $mysqlPath.trim();
-    # could still use trim here more elgantly I think, but trying different things while learning
-    [string]$mysql = $mysql -replace "^'", "";   # had to use special syntax to pass a string with spaces from vbscript to powershell
-    [string]$mysql = $mysql -replace "'$", "";   # had to use special syntax to pass a string with spaces from vbscript to powershell
-    $optionUser = $optionUser -replace "'", "";     # had to use special syntax for parameter with leading - ... confusion with powershell command
+                                                # could still use trim here more elgantly I think, 
+                                                # but trying different things while learning
+    [string]$mysql = $mysql -replace "^'", "";  # had to use special syntax to pass a string with spaces from vbscript to powershell
+    [string]$mysql = $mysql -replace "'$", "";  # had to use special syntax to pass a string with spaces from vbscript to powershell
+    $optionUser = $optionUser -replace "'", ""; # had to use special syntax for parameter with leading - ... confusion with powershell command
+    
     [Array]$arguments1 = "$optionDefault=$q$defaultsFile$q", $options, $optionUser, "$optionExecute=$q$executeCreateUser $backupPassword$semicolon$q";
     [Array]$arguments2 = "$optionDefault=$q$defaultsFile$q", $options, $optionUser, "$optionExecute=$q$executeGrantUser$semicolon$q";
     [Array]$arguments3 = "$optionDefault=$q$defaultsFile$q", $options, $optionUser, "$optionExecute=$q$executeFlushPrivileges$semicolon$q";
