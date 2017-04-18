@@ -27,7 +27,10 @@ try
     $executeGrantUser = "GRANT EVENT, LOCK TABLES, SELECT, SHOW VIEW,  TRIGGER ON $database.* TO '$backupUser'@'localhost'";
     $executeFlushPrivileges = "FLUSH PRIVILEGES";
 
-    [string]$mysql = $mysqlPath -replace "'", "";   # had to use special syntax to pass a string with spaces from vbscript to powershell
+    [string]$mysql = $mysqlPath.trim();
+    # could still use trim here more elgantly I think, but trying different things while learning
+    [string]$mysql = $mysql -replace "^'", "";   # had to use special syntax to pass a string with spaces from vbscript to powershell
+    [string]$mysql = $mysql -replace "'$", "";   # had to use special syntax to pass a string with spaces from vbscript to powershell
     $optionUser = $optionUser -replace "'", "";     # had to use special syntax for parameter with leading - ... confusion with powershell command
     [Array]$arguments1 = "$optionDefault=$q$defaultsFile$q", $options, $optionUser, "$optionExecute=$q$executeCreateUser $backupPassword$semicolon$q";
     [Array]$arguments2 = "$optionDefault=$q$defaultsFile$q", $options, $optionUser, "$optionExecute=$q$executeGrantUser$semicolon$q";
