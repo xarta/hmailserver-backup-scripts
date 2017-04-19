@@ -1,0 +1,182 @@
+Installed windows, created G & F drives
+Delay feature update by 365 days
+Turn off unnecessary features
+View hidden files and file extensions
+Changed power settings - sleep etc.
+
+Enabled Remote Desktop - optional - setup registry/firewall to
+- listen on different port (XartaFirewall.vbs)
+
+Copied over XARTA-SCRIPTS, certificates folder etc.
+Check paths in xarta.json suitable for 32bit or 64bit environment
+
+Install paint shop pro for screenshots
+
+XartaWindowsAccounts.vbs
+XartaFirewall.vbs *email & maybe rdp range
+
+Folder permissions (modify):
+
+    1.) F:\     ... NETWORKSERVICE
+                ... XartaMail       (might not need this)
+                ... XartaTask
+
+        ... create F:\sql\data & F:\sql\prog folders
+
+    2.) G:\     ... XartaMail
+                ... XartaTask
+
+        ... create G:\hMailServer\Data folder
+
+Create Windows Defender folder exclusion for G:\hMailServer\Data
+
+
+Import certificates - CA, Intermediate  
+    - nb: mail.xarta.co.uk entered in hMailServer settings with key
+
+
+Disable IPV6:   to make scripted hMailServer & mysqldump etc. binding easier
+                TODO: work this out ... want to support IPV6 !!!
+
+
+INSTALL mySQL
+
+    - mysql-installer-community-5.7.17.0-includes-workbench-32BIT.msi
+    - ... CUSTOM:   SERVER, WORKBENCH, UTILITIES, CONNECTOR/NET & C++, DOCS
+    - ...           MAYBE: NOTIFIER, ODBC CONNECTOR
+    - click on things to resolve (.NET runtime etc.) and press execute
+        (it's lying when it says nothing to do)
+    -   (might lie about failure too)
+    - execute installation of all the sub-products
+    - CONFIGURE:
+    - ... Server machine, 3306, no firewall opening (localhost only)
+    - ... add ROOT PASSWORD (LastPass)
+    - ... add user: hMailServer
+            localhost
+            DB Admin           TODO: REVIEW THIS ***
+            MySQL (authentication)
+            Password - see Xarta.json
+
+    *** ... bear in mind I now use this account to create the dump account.
+            really I only need to make the dump account at the beginning - 
+            so need a separate set-up script for that to run under root ...
+        ... asking for root input & using powershell secure password? ...
+        ... and change hMailServer to least privaledge for hMailServer app
+
+    - Windows Service - defaults
+    - Not using as a document store
+    - Error log: F:\sql\error.log
+    - General log: none
+    - Slow Query log: F:\sql\slow.log  5-seconds
+    - Bin Log - leave alone
+
+    - Execute / Finish
+    - DO NOT START WORKBENCH (want to change mysql ini location first!)
+
+    - Open services.msc
+    - Look for mySQL ... properties ... defaults-file
+    - STOP SERVICE
+    - Example: "C:\ProgramData\MySQL\MySQL Server 5.7\my.ini"
+    - Copy my.ini from that location to F:\sql\prog\my.ini
+    - Search & replace every occurance in the registry ... regedit
+    - close/re-open service properties - check default path
+
+    - COPY data directory to F: drive
+
+    - EDIT my.ini
+    - ...	datadir = "F:/sql/data\"	(trying without quotes F:/sql\data)
+    - ...	innodb_log_buffer_size=1M 	(default)
+    - ...	innodb_buffer_pool_size=100M	
+    - ...	innodb_log_file_size=25M
+    - ...	innodb_thread_concurrency=8 ??? change this? (to 4?)
+    - ...	innodb_buffer_pool_instances=4
+
+    - START SERVICE
+
+    - Using mysql notifier - manage instance (opens Workbench)
+    - Workbench preferences: Administration: Data Export and Import
+    - ... Edit all 3 paths to match the server installation directory,
+    - ... C:\Program Files\MySQL\MySQL Server 5.7\bin\mysqldump.exe
+    - ... C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe
+    - ... and, G:\mysql_dump for the dump directory
+
+
+
+INSTALL hMailServer
+
+    - find appropriate version of mysql dll e.g. 32bit = libmysql.dll 
+    - ... likely in C:\Program Files\MySQL\MySQL Server 5.7\lib
+    - ... and paste it into a new Bin folder: G:\hMailServer\Bin
+
+    - Run hMailServer set-up ... install to G:\hMailServer (save ver as import source)
+    - Password is for hMailServer administrator (nothing to do with mySQL)
+    - Will install .Net dependencies
+    - Same password again ... now onto databases
+
+    - CREATE default database ... "hmailserver" and "hMailServer" user credentials
+    - ... on local host ... and dependent service will be the mySQL one
+
+
+    AT THIS POINT WE HAVE A WORKING hMailServer with no settings/domains
+
+    BUT:    services.msc ... change hMailServer service log-on to use
+            the hMailServer Windows account added earlier (password in Xarta.json)
+
+
+INSTALL OTHER SOFTWARE:
+
+    - 7zip
+    - Git (clone scripts) (remember the gui thingy for .ignore files)
+    - XCA
+    - VS CODE  (publish) & (remember gist token for settings - see detailed note)
+    - NotePad Plus PLus
+
+IF THIS IS A VM, HALT AT THIS POINT.
+
+    - 1 COPY FOR mail4.xarta.co.uk BACKUP SYSTEM  (backup for    mail4 compute stick)
+    - 1 COPY FOR mail2.xarta.co.uk OPERATIONAL MX (additional to mail1 compute stick)
+
+
+External: 81.137.121.100
+Internal: 192.168.3.51 (compute stick), 54 (VM)
+mail4.xarta.co.uk
+
+    - stop services, of course
+    - IMPORT mySQL (which includes existing HMS settings)
+    - IMPORT HMS data ("extract" from 7zip)
+    - Check incoming relays (mail1 & mail2)
+    - SMTP: Bind to local IP address and local host name = mail4.xarta.co.uk
+    - Check pfSense routing, split DNS, any security settings, BT rDNS
+    - Check certificates & DKIM paths & DNS
+    - XartaBackup.vbs   => set-up scheduler for back-ups
+    - Check can connect to network SAMBA Back-up folder
+    - WHEN READY, BLOCK ALL PORTS EXCEPT 587 AND 993 (EXTERNAL)
+    - AND ONLY ALLOW AUTHENTICATED PORT 25 INTERNAL? (FROM RELAYS)
+    - ASSUMES ANY SPAM IS MARKED AS SPAM BY MX'S ... AND REVIEW
+    - PERMISSIONS TO SEND MAIL TO EXTERNALS ... NOT SURE OF PERMISSIVE CONFIGS
+    - TODO: reverse proxy 587 & 993?  Can I do that with pfSense package?
+
+    - UPDATE CLIENTS? should be fine - imap.xarta.co.uk & smtp.xarta.co.uk set
+    - ... in public DNS ... and self-signed certificates should be fine for a while
+    - ... or if changing to Lets Encrypt won't need to change anything anyway
+
+External: mail2 = 81.137.121.98, mail1 = 81.137.121.97
+Internal: 192.168.2.0 net single addresses
+mail2.xarta.co.uk & mail1.xarta.co.uk
+
+    - route each domain to hold/forward to mail4.xarta.co.uk (split DNS in pfSense?)
+    - SMTP Bind to local IP
+    - SMTP local host name = mail2.xarta.co.uk (& mail1.xarta.co.uk)
+    - Set-up spam assassin on either mail1 or mail2 (choose) **
+    - Set-up anti-virus ... either Clam on Ubuntu VM maybe, or Windows defender
+    - Check certificates
+    - Bear in mind want to move to using STARTSSL internally
+    - THESE SHOULD ONLY BE ON PORT 25 (IN) AND STARTSSL TO INTERNAL MAIL4 PORT 25
+
+    ** =>
+
+    *********
+    REMEMBER: either mail1 or mail2 or both also set-up as IIS reverse proxy for websites
+    ********* + MQTT perimeter hub
+
+
