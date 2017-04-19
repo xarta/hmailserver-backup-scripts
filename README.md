@@ -17,7 +17,8 @@ Lots to do ... i.e .deleting/managing back-ups etc. to tie into a back-up manage
 
 Soon I hope to document some of this along with hMailServer installation and configuration on my blog: blog.xarta.co.uk
 
-Xarta.json as of 8th Apr 2017 with passwords removed:
+Xarta.json as of 19th Apr 2017 with passwords removed:
+TODO: RE-WORK CODE TO ALLOW FOR %PROGRAMFILES% ETC.
 
 ```json
 {
@@ -28,113 +29,113 @@ Xarta.json as of 8th Apr 2017 with passwords removed:
 		"keepDays": 60
 	},
 	"tasks": {
-		"ApprovedDeleteOldBackUps": {
-			"TN": "hMailServer DO NOT RUN HERE",
-			"SC": "ONCE",
-			"D": "01/01/2050",
-			"ST": "06:00"
-		},
-		"ScheduledDeleteOldBackUps": {
-			"TN": "hMailServer Prune old back-ups",
-			"SC": "WEEKLY",
-			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
-			"ST": "04:00"
-		},
 		"BkUpHMSsettings": {
-			"TN": "hMailServer Settings Backup",
+			"TN": "01_hMailServer Settings Backup",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
-			"ST": "01:00"
-		},
-		"BkUpMySql": {
-			"TN": "hMailServer mySql Dump",
-			"SC": "WEEKLY",
-			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
-			"ST": "01:15"
-		},
-		"BkUpHMSdata": {
-			"TN": "hMailServer 7zip data",
-			"SC": "WEEKLY",
-			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
-			"ST": "01:25"
-		},
-		"DeleteHMSsettings": {
-			"TN": "hMailServer Delete tmp settings bkup",
-			"SC": "WEEKLY",
-			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
-			"ST": "02:00"
-		},
-		"DeleteSqlDump": {
-			"TN": "hMailServer Delete MySQL Dump",
-			"SC": "WEEKLY",
-			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
-			"ST": "02:30"
+			"ST": "19:00"
 		},
 		"CopyHMSsettings": {
-			"TN": "hMailServer 7zip settings",
+			"TN": "02_hMailServer 7zip settings",
 			"SC": "WEEKLY",
 			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
-			"ST": "01:05"
+			"ST": "19:05"
+        },
+		"BkUpMySql": {
+			"TN": "03_hMailServer mySql Dump",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "19:10"
+		},
+		"BkUpHMSdata": {
+			"TN": "04_hMailServer 7zip data",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "19:20"
+		},
+		"DeleteHMSsettings": {
+			"TN": "05_hMailServer Delete tmp settings bkup",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "19:40"
+		},
+		"DeleteSqlDump": {
+			"TN": "06_hMailServer Delete MySQL Dump",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "19:45"
+		},
+		"ScheduledDeleteOldBackUps": {
+			"TN": "07_hMailServer Prune old back-ups",
+			"SC": "WEEKLY",
+			"D": "MON,TUE,WED,THU,FRI,SAT,SUN",
+			"ST": "19:50"
+		},
+		"ApprovedDeleteOldBackUps": {
+			"TN": "08_hMailServer DO NOT RUN HERE",
+			"SC": "ONCE",
+			"D": "11/11/2111",
+			"ST": "11:11"
 		}
 	},
 	"hMailServer": {
 		"User": "Administrator",
-		"Password": "BLAH"
+		"Password": "BLAH BLAH BLAH"
 	},
 	"mySQL": {
 		"backup": {
 			"User": "dump",
-			"Password": "BLAH"
+			"Password": "BLAH BLAH BLAH"
 		},
 		"hmailserver": {
 			"User": "hMailServer",
-			"Password": "BLAH"
+			"Password": "BLAH BLAH BLAH"
 		},
 		"test": {
 			"User": "test",
-			"Password": "test"
+			"Password": "BLAH BLAH BLAH"
 		}
 	},
 	"7zip": {
-		"Password": "BLAH",
+		"Password": "BLAH BLAH BLAH",
 		"test": "test"
 	},
 	"network": {
 		"User": "admin",
-		"Password": "BLAH"
+		"Password": "BLAH BLAH BLAH"
 	},
 	"windowsAccounts": {
 		"scheduler": {
 			"User": "XartaTask",
-			"Password": "BLAH",
+			"Password": "BLAH BLAH BLAH",
 			"Group": "Administrators",
 			"Fullname": "XartaTasks admin",
 			"Description": "Admin for scheduler tasks when XartaMail not logged on"
 		},
 		"mailservice": {
 			"User": "XartaMail",
-			"Password": "BLAH",
+			"Password": "BLAH BLAH BLAH",
 			"Group": "Users",
 			"Fullname": "hMailServer User",
 			"Description": "Less priviledged user for hMailServer"
 		},
 		"testonly": {
 			"User": "XartaTest",
-			"Password": "BLAH",
+			"Password": "BLAH BLAH BLAH",
 			"Group": "Users",
 			"Fullname": "Mr Xarta Test",
 			"Description": "Just for test use in scripting"
 		}
 	},
 	"paths": {
-		"mysqlexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysql.exe",
+		"mysqlexe": "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysql.exe",
 		"mysqlini": "F:\\sql\\prog\\my.ini",
-		"mysqldumpexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysqldump.exe",
-		"mysqlcheckexe": "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.7\\bin\\mysqlcheck.exe",
+		"mysqldumpexe": "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysqldump.exe",
+        "mysqlcheckexe": "C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\mysqlcheck.exe",
 		"mysqldumpoutput": "G:\\mysql_dump",
 		"mysqldumpdefaultsextrafile": "F:\\sql\\prog\\my.cnf",
 		"hmdata": "G:\\hMailServer\\Data",
-		"uncServer": "\\\\XWIFI02",
+		"uncServer": "\\\\192.168.3.52",
 		"uncPath": "\\USBDisk1_Volume1",
 		"hmsettingsbkup": "G:\\settings_backup",
 		"hmcertificates": "G:\\certificates",
