@@ -97,7 +97,7 @@ INSTALL mySQL
     - Workbench preferences: Administration: Data Export and Import
     - ... Edit all 3 paths to match the server installation directory,
     - ... C:\Program Files\MySQL\MySQL Server 5.7\bin\mysqldump.exe
-    - ... C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe
+    - ... C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe EDIT: LEAVE THIS ONE OUT - KEEP BUNDLED FOR IMPORTS
     - ... and, G:\mysql_dump for the dump directory
 
 
